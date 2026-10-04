@@ -1,0 +1,18 @@
+{
+  "blank_control": {
+    "recorded_approved_ids": [],
+    "next_worker_approved_ids": [
+      "s000001"
+    ],
+    "next_worker_inline_ids": [
+      "s000001"
+    ],
+    "registered_read_ids": []
+  },
+  "failed_monitor_on_truthful_measurement": {
+    "independent_validation": true,
+    "verification": "VERIFIED",
+    "quarantine": "QUARANTINED",
+    "admissible": false
+  }
+}

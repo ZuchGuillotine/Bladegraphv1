@@ -1,0 +1,21 @@
+cycle 0 evaluations 8 final False
+cycle 1 evaluations 8 final False
+cycle 2 evaluations 16 final False
+cycle 3 evaluations 17 final False
+cycle 4 evaluations 17 final False
+cycle 5 evaluations 17 final False
+cycle 6 evaluations 22 final False
+cycle 7 evaluations 22 final False
+cycle 8 evaluations 22 final False
+cycle 9 evaluations 22 final False
+site update site-update-notice [1, 3]
+cycle 10 evaluations 22 final False
+cycle 11 evaluations 22 final False
+bundle <local>/bladegraph-runtime/recovery-20261003/runs/series5-recovery-glm53-v4/block-s71-R0.tar.gz
+Traceback (most recent call last):
+  File "./scripts/run_workflow.py", line 541, in <module>
+  File "./scripts/run_workflow.py", line 447, in main
+  File "./bladegraph/providers.py", line 249, in chat
+  File "./bladegraph/providers.py", line 156, in call
+  File "./bladegraph/cost_ledger.py", line 35, in reserve
+bladegraph.cost_ledger.BudgetExceeded: project or run budget exhausted

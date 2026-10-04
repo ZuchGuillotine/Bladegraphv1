@@ -1,0 +1,35 @@
+{
+  "fixture_not_live": true,
+  "characters": 961,
+  "packet": {
+    "goal": "Select one forecasting model for all 8 fleet sites using complete evaluation evidence; minimize fleet mean loss.",
+    "constraints": [
+      "Use current full-population evidence; diagnostics are never official.",
+      "Read sources before citing dependencies; do not invent results."
+    ],
+    "assignment": {
+      "role": "analyst",
+      "site": 4
+    },
+    "identity": "worker-04",
+    "generation": 1,
+    "approved_node_ids": [
+      "s000001"
+    ],
+    "next_step": "Read relevant approved nodes before citing them, starting with {\"op\":\"read\",\"artifact_id\":\"s000001\"}. Use work_status for missing current coverage; query the graph for details.",
+    "evaluation_credits_remaining": 6,
+    "deadline_cycle": 24,
+    "fleet_target_loss": 24.85,
+    "situation": "Continue unfinished work for site 4. Existing work under this identity is your predecessor's; read before citing. Preserve current evidence; replace outdated site evidence.",
+    "site_versions": {
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1
+    }
+  }
+}

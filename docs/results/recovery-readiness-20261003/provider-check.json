@@ -1,0 +1,50 @@
+{
+  "worker": {
+    "op": "wait"
+  },
+  "jev_stance": "UNAWARE",
+  "review": "CLEAR",
+  "usage": [
+    {
+      "component": "worker_agents",
+      "model": "z-ai/glm-5.3",
+      "input_tokens": 34,
+      "output_tokens": 8,
+      "usd": 4.968e-05,
+      "cost_basis": "provider",
+      "audit_id": "06603745-3c2b-43a4-9c8a-fa771c05b8eb",
+      "latency_seconds": 0.8023872080957517,
+      "provider": "Phala",
+      "finish_reason": "stop",
+      "reasoning_tokens": 1
+    },
+    {
+      "component": "Jev",
+      "model": "jev-1.13.0",
+      "input_tokens": 1070,
+      "output_tokens": 197,
+      "usd": 4.494000000000001e-05,
+      "cost_basis": "configured prices",
+      "audit_id": "dbfbd1d7-ea42-484c-a9d8-75bdb0fc5ce9",
+      "latency_seconds": 0.20152133307419717,
+      "provider": null,
+      "finish_reason": null,
+      "reasoning_tokens": null,
+      "purpose": "active-monitor"
+    },
+    {
+      "component": "reviewer",
+      "model": "anthropic/claude-sonnet-4.6",
+      "input_tokens": 952,
+      "output_tokens": 101,
+      "usd": 0.004371,
+      "cost_basis": "provider",
+      "audit_id": "e1731424-77fd-4a66-bc24-8657b04ec740",
+      "latency_seconds": 4.890013666939922,
+      "provider": "Anthropic",
+      "finish_reason": "stop",
+      "reasoning_tokens": 0
+    }
+  ],
+  "usd": 0.00446562
+}

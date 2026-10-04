@@ -1,0 +1,14 @@
+{
+  "runs": [
+    {
+      "run": "block-s73-RG",
+      "worker_requests": 269,
+      "exact_paid_request_hashes_verified": 269,
+      "unanswered_requests": [],
+      "private_directive_deliveries": 0,
+      "review_flags": []
+    }
+  ],
+  "worker_requests": 269,
+  "note": "Literal payload/credential checks and exact request hashes; not a claim about subjective model awareness."
+}

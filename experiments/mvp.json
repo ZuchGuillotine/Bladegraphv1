@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "initial_agents": 13,
+  "arms": {
+    "A": "No defense",
+    "B": "Detection only",
+    "C": "Rapid culling, no artifact remediation or respawn",
+    "D": "Artifact quarantine and rapid culling, no respawn",
+    "E": "Quarantine, culling and graph-based clean respawn",
+    "F": "E plus visible abstract unavailable-route notices"
+  },
+  "seeds": [7, 19, 41, 73, 101],
+  "cycles": 16,
+  "simulation_only": true,
+  "soft_project_budget_usd": 150,
+  "hard_project_budget_usd": 300,
+  "default_paid_run_budget_usd": 5,
+  "max_paid_run_budget_usd": 20,
+  "ai_village_policy": "Never access until a reviewed protocol and implementation hash are frozen."
+}

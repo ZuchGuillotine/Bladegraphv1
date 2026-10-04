@@ -1,0 +1,9 @@
+{
+  "normal_metrics_valid": false,
+  "termination": "failed",
+  "primary_failure": "TypeSafe shadow-monitor HTTP 520",
+  "secondary_failure": "graph replay assertion during export; raw log and retained provider records recovered offline without replaying paid calls",
+  "settled_usd": 0.007832712,
+  "reserved_usd": 0.002109744,
+  "ledger_rows": 50
+}

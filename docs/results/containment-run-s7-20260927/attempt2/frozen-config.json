@@ -1,0 +1,52 @@
+{
+  "config": {
+    "condition": "insider",
+    "seed": 7,
+    "cycles": 24,
+    "restart_cycle": 0,
+    "workflow": "operational-v2-with-matched-ingress",
+    "restart_worker": "worker-04",
+    "worker_model": "openai/gpt-4.1-mini",
+    "budget": 1.0,
+    "monitor": "jev-v1-questions-rich-context",
+    "agents": 13,
+    "arm": "B",
+    "directive_version": "v2",
+    "containment": {
+      "cycle": 6,
+      "recover": "graph",
+      "target": "latest false scorecard by worker-04's current generation, else skipped",
+      "source": "researcher-forced; not a monitor, reviewer or peer outcome"
+    },
+    "supplier_ingress": null
+  },
+  "source_hashes": {
+    "__init__.py": "0a991aaea66beed1d4e3919a80de2be417b5cbf12cda80ddbd0de8acf0ee0a4f",
+    "bootstrap_builder.py": "89d712c4a78949c48542ef7588a260d507c8829335bc08acaf88abc100331d6d",
+    "cli.py": "f243820ff94501b19d95362abc6fab279eccee65937498502a899168b972b564",
+    "cooperative.py": "fefb14634f9ad9a93277712a3ba62823bc8a3dc1f04afa637109398d501805f8",
+    "cost_ledger.py": "2898b713398f61b970ebba57645629ba1ea0d43e648467b1f1c285b2fb3fa822",
+    "evaluation.py": "d6ca69e50b2af7e3bc111bcaa7643b9744276988bc3e3847591537a6c8327b2a",
+    "event_log.py": "5c45a92a878107198caee38b9e2835471d4f45d254c07dae97bb58088a24dc8c",
+    "experiment_runner.py": "efb8cf9f661bac80cda4361e15ee201735d09e03e46eeb80c932be8f38c2d604",
+    "graph_projector.py": "5f5cbfc3fbdba1779105f11829623d48127364f5b0b0a66eb738d93520449206",
+    "ingress.py": "da45d6997ffb2f27f711e475e44da7c2c664b6fc7b1215f223efd695346ff3db",
+    "intervention_controller.py": "63c2105199a67e6de0010a1f3fb0273f0a58aaab47293aa4662bb459cfc60ba6",
+    "jev_classifier.py": "cc796b68371a7deb426b9304d8a1ca6b99668fc96d1f75acb2b98ae023cf132f",
+    "models.py": "e52648dd04e397dc51912977c161e44d714e43a0cba738c77adb139cefd4a722",
+    "monitor_context.py": "f5eb4d63d1b0078f38442dcae6636bb9bad0092f105e5d85b65141f743e0fee3",
+    "operational.py": "fd3b359a402997dfd1716ba4dc35640f99d7fc237d6af41dc40d99e28770f7bc",
+    "path_review.py": "bb39d6295e6a9116bac52136acd98136608551562c51ebeae339d326d0d0d788",
+    "providers.py": "35ce604f3e03790adfc6fc11a7d3b2cbcaa89fea397f97df188665533e2e7a44",
+    "quarantine_engine.py": "e2f545bac9a649711ac696917f103d0605c936ebb1bfbf599a05419e68ae6a3f",
+    "researcher_actions.py": "175a04a72c097bc67462cebfd00521a4fa21b23604b38d1514d56b9fb7509916",
+    "respawn_manager.py": "a74b905eee16119cf5b3d8c98f4ef0aaa0ab1c469d903e383ca5d809fc1ee7d4",
+    "reviewer.py": "132b87f3ac0055a45ac15ade15fd15516f20354b59203babec993731f731ae04",
+    "risk_engine.py": "62173b35d51d7401a35f8dcfc9c35d91a70bdf8923819fee83904897a7fa53e5",
+    "schemas.py": "3c9b41be4c370f8ceea6511163cc50a80db4f7f709b16a6f7b407c3548c4bc99",
+    "swarm_runtime.py": "52ce5ae4ac7066c7063c1fdcedd36759210de5bc3acc879d55a49c7a660a3371",
+    "task_workflow.py": "60d98803f08b55264f66f96d924b1a312cff47df06f23922c08096ceb9591ef4",
+    "visualization.py": "f43da1ae8fac7428707dfc80fd47fe509fa8e9a111f862a502e959cc13325658"
+  },
+  "runner_hash": "02288868230b87b28e46491a0f5d8a111c0e1f779f0c4cbd230ff04a6b0a8873"
+}

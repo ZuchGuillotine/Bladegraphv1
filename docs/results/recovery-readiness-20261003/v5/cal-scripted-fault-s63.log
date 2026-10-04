@@ -1,0 +1,35 @@
+cycle 0 evaluations 8 final False
+Traceback (most recent call last):
+  File "./scripts/run_workflow.py", line 468, in main
+    rt.step(a, action)
+    ~~~~~~~^^^^^^^^^^^
+  File "./bladegraph/operational.py", line 514, in step
+    return self.record_result(agent, action, result, created, audit, event["event_id"])
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "./bladegraph/cooperative.py", line 1106, in record_result
+    self.controller.observe(self, agent, ctx)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "./bladegraph/intervention_controller.py", line 139, in observe
+    self.shadow(runtime, agent, context)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "./bladegraph/intervention_controller.py", line 105, in shadow
+    result = self.shadow_classifier.classify(context)
+  File "./bladegraph/jev_classifier.py", line 121, in classify
+    response = self.provider.call(request)
+  File "./bladegraph/providers.py", line 175, in call
+    result = self.transport(body)
+  File "./bladegraph/providers.py", line 130, in _http
+    raise ProviderUnavailable(http_status=exc.code) from None
+bladegraph.providers.ProviderUnavailable: provider HTTP 520; reservation retained
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "./scripts/run_workflow.py", line 547, in <module>
+    main()
+    ~~~~^^
+  File "./scripts/run_workflow.py", line 493, in main
+    stats = export(rt, args.output, config)
+  File "./scripts/run_study.py", line 346, in export
+    raise AssertionError("graph replay mismatch")
+AssertionError: graph replay mismatch

@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BladeGraph event v1",
+  "type": "object",
+  "required": [
+    "event_id",
+    "sequence",
+    "timestamp",
+    "timestamp_basis",
+    "agent_id",
+    "agent_generation",
+    "event_type",
+    "task_id",
+    "parent_event_ids",
+    "artifact_ids_read",
+    "artifact_ids_written",
+    "artifact_ids_derived_from",
+    "message_recipients",
+    "tool_name",
+    "tool_action_summary",
+    "result_summary",
+    "classifier_result",
+    "review_status",
+    "intervention_state",
+    "payload",
+    "previous_hash",
+    "hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "timestamp_basis": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "agent_generation": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "parent_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact_ids_read": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact_ids_written": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact_ids_derived_from": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "message_recipients": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tool_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tool_action_summary": {
+      "type": "string"
+    },
+    "result_summary": {
+      "type": "string"
+    },
+    "classifier_result": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "stance_distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "UNAWARE": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "EXPOSED": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "INVESTIGATING": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "REFUSING": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "REPORTING": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "ADOPTING": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "COORDINATING": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "AMBIGUOUS": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "UNAWARE",
+                "EXPOSED",
+                "INVESTIGATING",
+                "REFUSING",
+                "REPORTING",
+                "ADOPTING",
+                "COORDINATING",
+                "AMBIGUOUS"
+              ]
+            },
+            "goal_violation_probability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "action_enablement_probability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "transmission_probability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "reasoning_action_mismatch_probability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "artifact_risk_probability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "requires_review": {
+              "type": "boolean"
+            },
+            "model": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "stance_distribution",
+            "goal_violation_probability",
+            "action_enablement_probability",
+            "transmission_probability",
+            "reasoning_action_mismatch_probability",
+            "artifact_risk_probability",
+            "confidence",
+            "requires_review",
+            "model"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "review_status": {
+      "type": "string"
+    },
+    "intervention_state": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "previous_hash": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string"
+    }
+  }
+}

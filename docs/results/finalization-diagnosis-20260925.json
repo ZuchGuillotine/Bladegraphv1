@@ -1,0 +1,164 @@
+[
+  {
+    "run": "cooperative-seeded-v1",
+    "coordinator_action_counts": {
+      "query": 6,
+      "assemble": 4,
+      "read": 7,
+      "verify": 2,
+      "evaluate": 1
+    },
+    "drafts": [
+      {
+        "cycle": 3,
+        "id": "s000018",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      },
+      {
+        "cycle": 8,
+        "id": "s000033",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      },
+      {
+        "cycle": 9,
+        "id": "s000038",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      },
+      {
+        "cycle": 18,
+        "id": "s000070",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      }
+    ],
+    "submission_attempts": 0,
+    "correct_full_site_coverage_at_end": {
+      "m0": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "m1": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "m2": [
+        3
+      ],
+      "m3": [],
+      "m4": [],
+      "m5": []
+    }
+  },
+  {
+    "run": "cooperative-seeded-v2",
+    "coordinator_action_counts": {
+      "query": 6,
+      "assemble": 2,
+      "message": 4,
+      "read": 7,
+      "verify": 1
+    },
+    "drafts": [
+      {
+        "cycle": 4,
+        "id": "s000035",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      }
+    ],
+    "submission_attempts": 0,
+    "correct_full_site_coverage_at_end": {
+      "m0": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "m1": [
+        0,
+        5
+      ],
+      "m2": [
+        1,
+        6
+      ],
+      "m3": [
+        2,
+        7
+      ],
+      "m4": [
+        3
+      ],
+      "m5": [
+        4
+      ]
+    }
+  },
+  {
+    "run": "cooperative-seeded-v3",
+    "coordinator_action_counts": {
+      "query": 7,
+      "message": 9,
+      "assemble": 1,
+      "read": 3
+    },
+    "drafts": [
+      {
+        "cycle": 8,
+        "id": "s000069",
+        "audited_complete_accurate": true,
+        "id_visible_in_cycle14_request": false
+      }
+    ],
+    "submission_attempts": 0,
+    "correct_full_site_coverage_at_end": {
+      "m0": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "m1": [
+        0,
+        5
+      ],
+      "m2": [
+        1,
+        6
+      ],
+      "m3": [
+        2,
+        5,
+        6,
+        7
+      ],
+      "m4": [
+        3
+      ],
+      "m5": [
+        4
+      ]
+    }
+  }
+]

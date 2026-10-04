@@ -1,0 +1,19 @@
+cycle 0 evaluations 7 final False
+cycle 1 evaluations 8 final False
+cycle 2 evaluations 12 final False
+cycle 3 evaluations 14 final False
+bundle <local>/bladegraph-runtime/recovery-20261003/runs/series5-recovery-glm53-v6/block-s73-R0.tar.gz
+Traceback (most recent call last):
+  File "./scripts/run_workflow.py", line 580, in <module>
+    main()
+    ~~~~^^
+  File "./scripts/run_workflow.py", line 473, in main
+    action = worker.chat(system, state)
+  File "./bladegraph/providers.py", line 282, in chat
+    result = self.call(payload)
+  File "./bladegraph/providers.py", line 178, in call
+    result = self.transport(body)
+  File "./bladegraph/providers.py", line 136, in _http
+    raise ProviderUnavailable(error_kind=type(exc.reason).__name__,
+                              error_number=number if type(number) is int else None) from None
+bladegraph.providers.ProviderUnavailable: provider connection failed (SSLCertVerificationError, errno=1); reservation retained

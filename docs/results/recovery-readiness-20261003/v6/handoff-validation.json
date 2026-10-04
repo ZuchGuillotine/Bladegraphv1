@@ -1,0 +1,10 @@
+{
+  "archives_verified": 14,
+  "internal_checksums_verified": 9047,
+  "scratch_ledger_restore_rows": 41411,
+  "scratch_ledger_restore_total_usd": 60.76722747344,
+  "v7_episode_commands_validated": 7,
+  "v7_paid_calls": 0,
+  "source_offline_tests": 127,
+  "active_paid_runner": false
+}

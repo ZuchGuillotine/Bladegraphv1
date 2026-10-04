@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bladegraph"
+version = "0.1.0"
+description = "Provenance-aware containment and recovery for a 13-agent research swarm"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+bladegraph = "bladegraph.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bladegraph*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]

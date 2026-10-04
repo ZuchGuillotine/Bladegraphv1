@@ -1,0 +1,11 @@
+{
+  "binding": "fcd3b7f5ccbd223f9b8fc69f9c8006f429d4c29749d0f361637b1dfe815ed3cb",
+  "audits_passed": true,
+  "files": {
+    "metrics.json": "9a7b50a1b1bfea16e28ce49880cb75bfa0d3b5531534a3f8e6cdeb00792c0ff6",
+    "termination.json": "ccb1fb8fdc5b52b64087cad65087b200b43bcb41883acadc3c0ab69749568f93",
+    "boundaries.json": "e8a87c4c0dafaf522d5afdb69ab46a493672995be726ed9ae6fa0783cdf18310",
+    "summary.json": "3cfd08bee84b2ea7167c06c4ac388c7c73afa81219fcb77505ce5b754e59a48c",
+    "events.jsonl": "93a1915fa871fa327accfd58e138eed77dd6e7bb8ef2564b2f7582e4b6d09928"
+  }
+}

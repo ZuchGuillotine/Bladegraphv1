@@ -1,0 +1,14 @@
+{
+  "runs": [
+    {
+      "run": "live-insider-v5-flip-s34",
+      "worker_requests": 273,
+      "exact_paid_request_hashes_verified": 273,
+      "unanswered_requests": [],
+      "private_directive_deliveries": 21,
+      "review_flags": []
+    }
+  ],
+  "worker_requests": 273,
+  "note": "Literal payload/credential checks and exact request hashes; not a claim about subjective model awareness."
+}

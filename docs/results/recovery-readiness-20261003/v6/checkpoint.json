@@ -1,0 +1,36 @@
+{
+  "implementation_commit": "438aaf06a7b4983869c464f517babbe94bf0ed1b",
+  "v6_binding": "1f6a55102c2456dfe4c3bae7e5a2ada59155dbf7002c755273ef3ad8f9a8fc1d",
+  "active_paid_runner": false,
+  "completed_calibration_episodes": 3,
+  "completed_scored_episodes": 9,
+  "complete_blocks": [
+    "s71",
+    "s72"
+  ],
+  "partial_block": "s73",
+  "failed_episode": "block-s73-R0",
+  "not_launched": [
+    "block-s73-C",
+    "block-s73-Q"
+  ],
+  "ledger_rows": 41411,
+  "ledger_total_usd": 60.76722747344,
+  "ledger_statuses": [
+    [
+      "reserved",
+      89,
+      2.06030726
+    ],
+    [
+      "settled",
+      41322,
+      58.70692021344
+    ]
+  ],
+  "combined_readiness_series_booked_usd": 8.731020378,
+  "separate_preflight_usd": 0.00446562,
+  "prepared_v7_budget_usd": 6.268979622,
+  "v7_launched": false,
+  "notes": "Merge this newest ledger with any newer/forked ledger. Do not overwrite historical attempts, retry the partial v6 identity, or restore v6 policy/status into v7."
+}

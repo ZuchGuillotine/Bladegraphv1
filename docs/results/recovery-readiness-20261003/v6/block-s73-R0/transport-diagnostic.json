@@ -1,0 +1,27 @@
+{
+  "paid_run_failure": [
+    "TimeoutError",
+    "SSLCertVerificationError",
+    "SSLCertVerificationError"
+  ],
+  "last_cycle": 4,
+  "retained_reservation_usd": 0.0814428,
+  "initial_false_publication_adjudicated": true,
+  "cull_or_respawn_delivered": false,
+  "normal_export_succeeded": true,
+  "completion_receipt": false,
+  "follow_up_read_only_checks_at": "2026-10-04T02:21:32.666840+00:00",
+  "follow_up_checks": [
+    {
+      "url": "https://openrouter.ai/api/v1/models",
+      "http": 200,
+      "tls_verified": true
+    },
+    {
+      "url": "https://api.typesafe.ai/",
+      "http": 404,
+      "tls_verified": true
+    }
+  ],
+  "interpretation": "Intermittent cause unresolved. Follow-up success does not establish long-run transport stability. TLS verification was not disabled."
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BladeGraph graph projection v1",
+  "type": "object",
+  "required": [
+    "nodes",
+    "edges",
+    "agents",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "nodes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "Agent",
+              "AgentGeneration",
+              "Artifact",
+              "GoalConstraint",
+              "Intervention",
+              "Message",
+              "Submission",
+              "Task",
+              "ToolAction",
+              "Validation"
+            ]
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source",
+          "target",
+          "type",
+          "event_id",
+          "timestamp"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "AUTHORED",
+              "CONTRADICTS",
+              "DERIVED_FROM",
+              "INVALIDATED_BY",
+              "MESSAGED",
+              "PRODUCED",
+              "QUARANTINED_BY",
+              "READ",
+              "REPORTS",
+              "RESPAWN_OF",
+              "RESPONDED_TO",
+              "SUBMITTED",
+              "SUPERSEDES",
+              "USED_TOOL",
+              "VALIDATES"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "agents": {
+      "type": "object"
+    },
+    "artifacts": {
+      "type": "object"
+    }
+  }
+}

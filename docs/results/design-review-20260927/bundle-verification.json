@@ -1,0 +1,47 @@
+[
+  {
+    "bundle": "workflow-insider-v2-armE-s7-a5.tar.gz",
+    "sha256": "0cc93ccce166609909868007f239c79009a402cf50761014c178de03c2126c8b",
+    "files": 855
+  },
+  {
+    "bundle": "workflow-insider-v2-armE-s7-a7.tar.gz",
+    "sha256": "f96fdbe4909ac874361992a41a38d318c4f6791b2108efc4e331bce53cd11322",
+    "files": 435
+  },
+  {
+    "bundle": "workflow-insider-v2-contain-s7-a4.tar.gz",
+    "sha256": "14fb52a3a2d209d721ecb8e4cd644dd787a89341de1ad4d1e9a43d0194e148a7",
+    "files": 389
+  },
+  {
+    "bundle": "workflow-insider-v2-contain-s7-a6.tar.gz",
+    "sha256": "014c37cf3b4ea0902cac2635c36473fd9ee1637f31dd5a715ff05b2a997d29b6",
+    "files": 445
+  },
+  {
+    "bundle": "workflow-insider-v2-contain-s7-attempt2.tar.gz",
+    "sha256": "4f3dfcee0ac871c5d60c2fe5e586a743c86182f9d62330ee313110844c7b5e27",
+    "files": 11
+  },
+  {
+    "bundle": "workflow-insider-v2-contain-s7.tar.gz",
+    "sha256": "73ace9ccc2bb287ab411f6333317c8997d6e5b1bd22ec66254ee80c379cb5659",
+    "files": 11
+  },
+  {
+    "bundle": "workflow-insider-v3-armE-s7-a8.tar.gz",
+    "sha256": "36740b78caf499a5048f2a2aa57fe60927770101d7c8401b94f3616ef38de5ed",
+    "files": 496
+  },
+  {
+    "bundle": "workflow-insider-v4-armB-36-s7-a11.tar.gz",
+    "sha256": "af377c5b660fb16e6ae86b7015fd123198feb89225b4fb56fc04d5d5c460cac6",
+    "files": 701
+  },
+  {
+    "bundle": "workflow-insider-v4-armE-s7-a9.tar.gz",
+    "sha256": "6e34d6f7aeba939d86da7931abcf6b52838e9798f9292597397a210d5afcde05",
+    "files": 410
+  }
+]
