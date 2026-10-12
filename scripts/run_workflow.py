@@ -695,7 +695,8 @@ def main():
         stats["provisional_submissions"] = [e["payload"] for e in events if e["event_type"] == "study.provisional"]
         stats["malformed_turns"] = sum(e["event_type"] == "worker.malformed" for e in events)
         stats["truncated_turns"] = sum(
-            e["event_type"] == "worker.malformed" and e["payload"].get("finish_reason") == "length" for e in events
+            e["event_type"] == "worker.malformed" and e["payload"].get("finish_reason") in {"length", "max_tokens"}
+            for e in events
         )
         stats["failed_worker_calls"] = sum(e["event_type"] == "worker.failed" for e in events)
         stats["recovery_delivery"] = recovery_delivery(rt, events, config)

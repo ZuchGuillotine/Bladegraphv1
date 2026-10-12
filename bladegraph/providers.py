@@ -52,6 +52,58 @@ class ProviderUnavailable(RuntimeError):
         super().__init__(f"provider {label}; reservation retained")
 
 
+# The worker action vocabulary as a JSON schema for providers with structured output (Anthropic
+# Messages API `output_config.format`, 2026-10-12). One object per op, every field required, no
+# additional properties: the reply can only be a valid protocol action. Optional fields are
+# nullable and nulls are stripped before dispatch. Mirrors FIELDS in bladegraph/cooperative.py.
+def _obj(props, required=None):
+    return {
+        "type": "object",
+        "properties": props,
+        "required": list(required if required is not None else props),
+        "additionalProperties": False,
+    }
+
+
+_ID = {"type": "string"}
+_IDS = {"type": "array", "items": _ID}
+_MODEL = {"type": "string", "enum": ["m0", "m1", "m2", "m3", "m4", "m5"]}
+_SITE = {"type": "integer", "enum": [0, 1, 2, 3, 4, 5, 6, 7]}
+_COHORT = {"type": "string", "enum": ["all", "stable"]}
+WORKER_ACTION_SCHEMA = {
+    "anyOf": [
+        _obj({"op": {"const": "comparison"}}),
+        _obj({"op": {"const": "query"}, "scope": {"type": "string"}, "cursor": {"type": ["integer", "null"]}}),
+        _obj({"op": {"const": "read"}, "artifact_id": _ID}),
+        _obj({"op": {"const": "evaluate"}, "model": _MODEL, "site": _SITE, "cohort": _COHORT}),
+        _obj(
+            {
+                "op": {"const": "publish"},
+                "content": _obj(
+                    {
+                        "kind": {"const": "scorecard"},
+                        "model": _MODEL,
+                        "site": _SITE,
+                        "cohort": _COHORT,
+                        "count": {"type": "integer"},
+                        "loss": {"type": "number"},
+                    }
+                ),
+                "derived_from": _IDS,
+            }
+        ),
+        _obj({"op": {"const": "message"}, "text": {"type": "string"}, "to": _IDS, "derived_from": _IDS}),
+        _obj({"op": {"const": "verify"}, "artifact_id": _ID}),
+        _obj({"op": {"const": "assemble"}, "artifact_ids": _IDS}),
+        _obj({"op": {"const": "submit"}, "artifact_id": _ID}),
+        _obj({"op": {"const": "report"}, "artifact_id": _ID, "summary": {"type": "string"}}),
+        _obj({"op": {"const": "wait"}}),
+    ]
+}
+
+ANTHROPIC_EFFORT = {"none": "low", "minimal": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
+
+
 class Provider:
     ENDPOINTS = {
         "Jev": "https://api.typesafe.ai/v1/systemone",
@@ -316,10 +368,22 @@ class Provider:
         if self.backend == "anthropic":
             # No sampling parameters: Claude Opus 5.5 rejects temperature with a 400, and its
             # always-on thinking counts toward max_tokens (2026-10-02, Run F preflight).
+            # Structured output (2026-10-12, series 8 Sonnet 5.5 stop): the reply is constrained to
+            # the protocol schema, so a tool-use model cannot answer with tool-call markup or
+            # trailing prose; effort is passed through output_config.
+            output_config = {
+                "format": {
+                    "type": "json_schema",
+                    "schema": self.response_schema if self.response_schema is not None else WORKER_ACTION_SCHEMA,
+                }
+            }
+            if self.reasoning_effort is not None:
+                output_config["effort"] = ANTHROPIC_EFFORT[self.reasoning_effort]
             payload = {
                 "system": system,
                 "messages": [{"role": "user", "content": canonical(state)}],
                 "max_tokens": self.max_output_tokens,
+                "output_config": output_config,
             }
         result = self.call(payload)
         if self.backend == "anthropic":
@@ -342,6 +406,8 @@ class Provider:
             content = content[4:-4]
         try:
             value = json.loads(content)
+            if self.backend == "anthropic" and isinstance(value, dict):
+                value = {k: v for k, v in value.items() if v is not None}  # nullable optional fields
         except ValueError:
             raise MalformedResponse("model response is not valid JSON", finish) from None
         if not isinstance(value, dict):

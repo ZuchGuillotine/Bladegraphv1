@@ -78,8 +78,24 @@ def _delivery_for(runtime, events, config, who):
     )
     approved = packet.get("approved_node_ids", [])
     versions = packet.get("site_versions", {})
-    current_ids = []
+    # The curated packet carries evidence nodes plus up to two "extras" the selector adds on
+    # purpose: the latest site-update notice and the fleet work order (recovery_nodes). Only the
+    # evidence nodes have a data version to be current on; the extras are checked by identity.
+    # Before 2026-10-05 the check counted the extras against the evidence total and failed every
+    # packet that carried a work order (series 7 Grok k1-s411 RG: delivered, check mis-specified).
+    evidence_ids, extras, unexpected = [], [], []
     for node in approved:
+        artifact = runtime.graph.artifacts[node]
+        if artifact.content.get("kind") in {"evaluation", "scorecard"}:
+            evidence_ids.append(node)
+        else:
+            extras.append(node)
+            is_notice = node.startswith("site-update-notice")
+            is_order = artifact.author.startswith("worker-12:") and artifact.content.get("selected_model") is not None
+            if not (is_notice or is_order):
+                unexpected.append(node)
+    current_ids = []
+    for node in evidence_ids:
         artifact = runtime.graph.artifacts[node]
         status = runtime.evidence_status(artifact)
         site = artifact.content.get("site")
@@ -108,7 +124,7 @@ def _delivery_for(runtime, events, config, who):
             ),
         )
         checks["bootstrap_treatment"] = (
-            bool(current_ids) and len(current_ids) == len(approved) if curated else not approved
+            bool(current_ids) and len(current_ids) == len(evidence_ids) and not unexpected if curated else not approved
         )
     return {
         "checks": checks,
@@ -117,6 +133,9 @@ def _delivery_for(runtime, events, config, who):
         "culled": culled,
         "replacement": who + ":g1" if born else None,
         "bootstrap": packet,
+        "packet_evidence_ids": evidence_ids,
+        "packet_extras": extras,
+        "packet_unexpected_extras": unexpected,
         "current_inherited_ids_at_spawn": current_ids,
         "opportunity": opportunity,
     }

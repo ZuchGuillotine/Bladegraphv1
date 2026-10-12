@@ -1,19 +1,41 @@
-"""Persistent reservations survive crashes and share a project-wide hard cap."""
+"""Persistent reservations survive crashes and share a project-wide hard cap.
 
+The project cap is a reviewed configuration file, `experiments/ledger-caps.json` (override the
+path with BLADEGRAPH_LEDGER_CAPS): `baseline_usd` is spend already in the cumulative ledger that
+an earlier cap period covered, and `soft_usd` / `hard_usd` bound the spend above that baseline.
+Without the file the historical constants apply: baseline 0, soft $150, hard $300. The ledger
+itself never resets; the baseline only moves the cap, and every row stays.
+"""
+
+import json
 import math
+import os
 import sqlite3
 import uuid
 from pathlib import Path
 
 COMPONENTS = {"worker_agents", "Jev", "reviewer", "simulation", "storage", "other"}
+DEFAULT_CAPS = {"baseline_usd": 0.0, "soft_usd": 150.0, "hard_usd": 300.0}
+CAPS_FILE = Path(__file__).resolve().parents[1] / "experiments" / "ledger-caps.json"
 
 
 class BudgetExceeded(RuntimeError):
     pass
 
 
+def load_caps(path: str | Path | None = None) -> dict:
+    source = Path(path or os.environ.get("BLADEGRAPH_LEDGER_CAPS") or CAPS_FILE)
+    if not source.is_file():
+        return dict(DEFAULT_CAPS)
+    data = json.loads(source.read_text())
+    caps = {k: float(data.get(k, DEFAULT_CAPS[k])) for k in DEFAULT_CAPS}
+    if not all(math.isfinite(v) and v >= 0 for v in caps.values()) or caps["soft_usd"] > caps["hard_usd"]:
+        raise ValueError("invalid ledger caps")
+    return caps
+
+
 class Ledger:
-    def __init__(self, path: str | Path, run_id: str, run_limit: float = 5.0):
+    def __init__(self, path: str | Path, run_id: str, run_limit: float = 5.0, caps: dict | None = None):
         if not math.isfinite(run_limit) or not 0 < run_limit <= 20:
             raise ValueError("MVP paid runs must have a budget in (0, $20]")
         self.path = Path(path)
@@ -22,6 +44,7 @@ class Ledger:
             "CREATE TABLE IF NOT EXISTS costs (id TEXT PRIMARY KEY, run TEXT, component TEXT, usd REAL, tokens INTEGER, status TEXT)"
         )
         self.run_id, self.run_limit = run_id, run_limit
+        self.caps = dict(caps) if caps is not None else load_caps()
 
     def reserve(self, component: str, upper_bound: float) -> str:
         if component not in COMPONENTS or not math.isfinite(upper_bound) or upper_bound < 0:
@@ -30,8 +53,10 @@ class Ledger:
         try:
             total = self.db.execute("SELECT COALESCE(SUM(usd), 0) FROM costs").fetchone()[0]
             run = self.db.execute("SELECT COALESCE(SUM(usd), 0) FROM costs WHERE run=?", (self.run_id,)).fetchone()[0]
-            # Stop at the soft target too; raising it requires a reviewed code/config change.
-            if total + upper_bound > 150 or total + upper_bound > 300 or run + upper_bound > self.run_limit:
+            # Spend above the reviewed baseline stops at the soft target; raising either figure
+            # is a reviewed change to experiments/ledger-caps.json, never a code edit here.
+            above = total - self.caps["baseline_usd"] + upper_bound
+            if above > self.caps["soft_usd"] or above > self.caps["hard_usd"] or run + upper_bound > self.run_limit:
                 raise BudgetExceeded("project or run budget exhausted")
             key = str(uuid.uuid4())
             self.db.execute(

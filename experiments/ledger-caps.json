@@ -1,0 +1,9 @@
+{
+  "note": "Reviewed project cap for the cumulative spend ledger (owner decision 2026-10-12). Series 8 runs under a fresh $150 cap counted above the spend already in the ledger at the 2026-10-12 merge; the ledger never resets and every earlier row stays. soft_usd and hard_usd bound spend above baseline_usd; the soft target is where the ledger stops. Prior period: baseline 0, soft 150, hard 300 (hackathon work through series 7, $112.735176103).",
+  "baseline_usd": 112.735176103,
+  "soft_usd": 150.0,
+  "hard_usd": 150.0,
+  "period": "series 8 cross-model comparison",
+  "set_on": "2026-10-12",
+  "ledger_at_baseline": "evidence/ledger-merge-20261012: 80730 rows, 112.735176103 USD, 104 unsettled reservations"
+}

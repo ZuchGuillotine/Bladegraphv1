@@ -103,7 +103,13 @@ def main():
         cmd += ["--budget", str(min(per_run, remaining))]
         print("episode", name, "profile", profile, flush=True)
         started = time.time()
-        row = {"role": episode["role"], "profile": profile, "command": cmd, "started": started, "via": "continue_series"}
+        row = {
+            "role": episode["role"],
+            "profile": profile,
+            "command": cmd,
+            "started": started,
+            "via": "continue_series",
+        }
         status["episodes"][name] = row
         status_path.write_text(json.dumps(status, indent=2) + "\n")
         with (base / f"{name}.log").open("x") as log:
@@ -117,12 +123,16 @@ def main():
 
                 bundle(out, Path(os.environ.get("BLADEGRAPH_LEDGER", str(ROOT / "private/spend.sqlite"))))
                 m = json.loads((out / "metrics.json").read_text())
-                row.update(usd=m.get("total_api_usd"), complete=m.get("task_complete"), recovery=m.get("recovery_delivery"))
+                row.update(
+                    usd=m.get("total_api_usd"), complete=m.get("task_complete"), recovery=m.get("recovery_delivery")
+                )
             except Exception as exc:
                 row["audit_error"] = str(exc)
                 code = 1
         status_path.write_text(json.dumps(status, indent=2) + "\n")
-        print("finished", name, {k: row.get(k) for k in ("exit", "seconds", "usd", "complete", "audit_error")}, flush=True)
+        print(
+            "finished", name, {k: row.get(k) for k in ("exit", "seconds", "usd", "complete", "audit_error")}, flush=True
+        )
         if code:
             raise RuntimeError("episode/audit failed; series stopped without retry")
     print("series spent", round(rs.spent(base), 4), flush=True)

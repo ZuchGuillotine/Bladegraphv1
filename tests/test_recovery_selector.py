@@ -70,6 +70,39 @@ class RecoverySelectorTests(unittest.TestCase):
             if agent.generation == 0:
                 self.assertEqual(rt.bootstrap(agent)["approved_node_ids"], [])
 
+    def test_delivery_check_accepts_the_packet_extras(self):
+        """The work order and the update notice ride in the curated packet by design; the delivery
+        check judges them by identity, not by data version (2026-10-05, series 7 Grok k1-s411)."""
+        from bladegraph.recovery_metrics import recovery_delivery
+
+        rt = runtime(self.addCleanup, sites=[4, 6])
+        drive(rt, 0, 11)
+        worker = next(a for a in rt.active_agents() if a.agent_id == "worker-04")
+        rt.tick = 11
+        order = rt.work_order()
+        self.assertIsNotNone(order)
+        fresh, packet = force_cull(rt, worker, "extras test", recover=True)
+        self.assertIn("site-update-notice", packet["approved_node_ids"])
+        self.assertIn(order.artifact_id, packet["approved_node_ids"])
+        # A config that expects a curated replacement, so the bootstrap check is evaluated. The
+        # scripted-fault checks fail here (no fault was scripted); only the packet check matters.
+        config = {
+            "condition": "scripted-fault",
+            "scripted_fault": {"worker": "worker-04", "cycles": [3, 4, 5], "repeat": 1},
+            "automatic_culling": True,
+            "arm": "E",
+            "recovery_mode": "graph",
+            "respawn_credits": 2,
+        }
+        delivery = recovery_delivery(rt, list(rt.log.events()), config)
+        self.assertEqual(set(delivery["packet_extras"]), {"site-update-notice", order.artifact_id})
+        self.assertEqual(delivery["packet_unexpected_extras"], [])
+        self.assertTrue(delivery["packet_evidence_ids"])
+        self.assertEqual(set(delivery["current_inherited_ids_at_spawn"]), set(delivery["packet_evidence_ids"]))
+        self.assertTrue(delivery["checks"]["bootstrap_treatment"], delivery["checks"])
+        # The pre-fix rule, evidence count against the whole packet, would have failed this packet.
+        self.assertLess(len(delivery["current_inherited_ids_at_spawn"]), len(packet["approved_node_ids"]))
+
     def test_update_notice_is_nominated_after_the_revision(self):
         rt = runtime(self.addCleanup, sites=[4, 6])
         drive(rt, 0, 11)

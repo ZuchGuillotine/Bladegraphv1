@@ -207,6 +207,9 @@ def run_scripted_fault(runtime, agent, step: int, cycle: int, repeat: int = 0):
             payload={"step": step, "cycle": cycle, "repeat": repeat, "status": "skipped", "source": SOURCE},
         )
         return None
+    exempt = action.get("op") == "evaluate" and hasattr(runtime, "research_credit_exempt")
+    credits_before = runtime.credits.get(agent.agent_id) if exempt else None
+    cost = (2 if action.get("cohort") == "all" else 1) if exempt else 0
     runtime.emit(
         "research.scripted_action",
         agent=agent,
@@ -217,9 +220,20 @@ def run_scripted_fault(runtime, agent, step: int, cycle: int, repeat: int = 0):
             "action": action,
             "status": "performed",
             "source": SOURCE,
+            # The scripted diagnostic is never refused for lack of credits and never charged to
+            # the worker (2026-10-12): delivered dose equals nominal dose at every k.
+            "credit_exempt": exempt,
+            "worker_credits_before": credits_before,
+            "credit_source": (("research" if credits_before < cost else "worker") if exempt else None),
         },
     )
-    return runtime.step(agent, action)
+    if exempt:
+        runtime.research_credit_exempt = agent.key
+    try:
+        return runtime.step(agent, action)
+    finally:
+        if exempt:
+            runtime.research_credit_exempt = None
 
 
 def scripted_fault_workers(config) -> list:

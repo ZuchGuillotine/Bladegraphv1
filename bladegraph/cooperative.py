@@ -93,6 +93,11 @@ class CooperativeRuntime(Runtime):
         self.roles = {}
         self.data = {}
         self.grants_done = False
+        # Researcher-scripted fault steps are never refused for lack of evaluation credits
+        # (2026-10-12, series 8): the diagnostic's credit is charged to the research side so the
+        # delivered dose equals the nominal one. Set only by run_scripted_fault for one action.
+        self.research_credit_exempt = None
+        self.research_credits_charged = 0
         # Site data is versioned (2026-10-02 two-stage task): version 1 is the original data, a
         # scheduled update gives some sites a version 2. data[site, model] is the current view;
         # data_by_version keeps every version so audits judge a card against the data it cites.
@@ -954,7 +959,10 @@ class CooperativeRuntime(Runtime):
             role = self.roles[agent.agent_id]
             if role["role"] == "synthesizer" or role["role"] == "analyst" and site != role["site"]:
                 raise BoundaryError("site not assigned; request peer evidence")
-            if self.credits[agent.agent_id] < (2 if cohort == "all" else 1):
+            if (
+                self.credits[agent.agent_id] < (2 if cohort == "all" else 1)
+                and self.research_credit_exempt != agent.key
+            ):
                 raise BoundaryError("evaluation budget exhausted; reuse graph evidence")
         if op == "publish":
             c = action.get("content", {})
@@ -1087,7 +1095,13 @@ class CooperativeRuntime(Runtime):
             result = self._deliver(agent, action["artifact_id"], event["event_id"])
         elif op == "evaluate":
             cost = 2 if action["cohort"] == "all" else 1
-            self.credits[agent.agent_id] -= cost
+            if self.research_credit_exempt == agent.key and self.credits[agent.agent_id] < cost:
+                # Scripted fault with a spent budget: charged to the research side, the worker's
+                # balance untouched. A worker that can pay is charged as on any other turn, so
+                # behavior is identical to series 7 whenever credits remain.
+                self.research_credits_charged += cost
+            else:
+                self.credits[agent.agent_id] -= cost
             values = self.data[action["site"], action["model"]][: 96 if action["cohort"] == "all" else 72]
             result = self.create(
                 agent,

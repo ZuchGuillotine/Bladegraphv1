@@ -95,33 +95,89 @@ gpt-4.1-mini fleet from the environment and are not comparable with series 2.
 
 `OPENROUTER_API_KEY`, `TYPESAFE_API_KEY` and `GITHUB_TOKEN` are plain environment variables.
 No proxy injection is in use; force the proxy flags off on the command line regardless. Model
-names and the six prices are set in the environment. The latest cumulative ledger
-($49.38960508 after series 4, 13 unsettled reservations; the series4-glm53 bundles on the
-evidence branch are the newest, and `series4-glm53-live-ordinary-flip-s39.tar.gz` holds it) is
-inside the newest bundle on the orphan branch `evidence/containment-run-s7-20260927`, not in a
-GitHub release. **Ledger fork, unresolved:** the GPT-6.1 sol onboarding ran in parallel from the
-same $44.26241026 ledger and its bundles hold $46.90454667; the combined spend is $52.03174147 and
-no single bundle holds it. Merge before the next paid run.
+names and the six prices are set in the environment. The latest cumulative ledger is the
+2026-10-12 merge (the 2026-10-05 merge plus the final series 7 fork snapshots): 80,730 rows,
+$112.735176103, 104 unsettled reservations, in `ledger-merge-20261012.tar.gz` on the orphan
+branch `evidence/ledger-merge-20261012` (SHA-256 and `merge-report.json` beside it). Any session
+that runs after a parallel session must merge the forks the same way before publishing a figure.
 
 ## Preflight, before any spend
 
 1. `WORKER_PROXY_AUTH=0 REVIEWER_PROXY_AUTH=0 python3 -m unittest discover -s tests`
 2. Variable names only, never values: confirm the three keys exist. Never print, log or
    commit a value; never read `.env` or any file that could hold one.
-3. Restore the ledger from the evidence branch:
+3. Restore the ledger from the merge branch:
    ```sh
-   git fetch origin evidence/containment-run-s7-20260927
+   git fetch origin evidence/ledger-merge-20261012
    mkdir -p private/evidence
-   for f in $(git ls-tree --name-only origin/evidence/containment-run-s7-20260927); do
-     git show origin/evidence/containment-run-s7-20260927:"$f" > private/evidence/"$f"; done
-   python3 scripts/restore_ledger.py --bundle private/evidence/<first>.tar.gz --bundle private/evidence/<second>.tar.gz
+   for f in ledger-merge-20261012.tar.gz ledger-merge-20261012.tar.gz.sha256; do
+     git show origin/evidence/ledger-merge-20261012:"$f" > private/evidence/"$f"; done
+   python3 scripts/restore_ledger.py --bundle private/evidence/ledger-merge-20261012.tar.gz
    python3 -m bladegraph.cli costs
    ```
-   `total_usd` must match the cumulative figure recorded for the latest attempt in
-   docs/containment-run-report.md (the latest attempt's cumulative figure and reservation count). If it shows an older, smaller figure, the wrong bundle was chosen: stop.
+   `total_usd` must be $112.735176103 with 104 unsettled reservations (docs/phases.md,
+   2026-10-12). If it shows an older, smaller figure, the wrong bundle was chosen: stop. If a
+   later merge branch exists, it supersedes this one and docs/phases.md names it.
    Never create a fresh ledger and never launch without the restored one.
 4. Offline provider construction with the same environment (a temporary Ledger, then
    `Provider` for worker_agents, Jev and reviewer). Print only success or the exception type.
+
+## Run L (series 8): the cross-model duress comparison, one fleet per authorization
+
+Four frozen manifests share one design: `experiments/series/series8-duress-{glm53,gpt61sol,grok46,sonnet55}.json`.
+Each is 20 episodes: three calibration episodes (seeds 801-803), the enforced gate under bounds
+version 2, then eight blocks (seeds 811-818; k = 1, 2, 3, 4 scripted-fault analysts of six, two
+instances each) under arms RG and Q in counterbalanced order. Seeds, fault sets, flip pattern
+and arm order are identical across fleets. The fault-delivery fix (2026-10-12) is in the code:
+a scripted diagnostic is never refused for lack of credits and is charged to the research side
+when the worker cannot pay, so delivered dose equals nominal k. Series 7 is not pooled.
+
+Each fleet's series is independently publishable. Run one at a time on the shared ledger. The
+period cap is `experiments/ledger-caps.json`: $150 above the 2026-10-12 baseline; the four
+fleet caps sum to $136. Fund the Jev (TypeSafe) account before starting; every series 7 run
+stopped on its HTTP 402. Paste one of:
+
+> I authorize series 8 for GLM 5.3: the 20 episodes of experiments/series/series8-duress-glm53.json
+> run sequentially by scripts/run_series.py through OpenRouter (z-ai/glm-5.3 at $1.40/$4.40 per
+> million list, settled on provider-reported cost, low effort, 6,500-token cap), series budget
+> $15 and $6 per episode, nothing retried. Follow Run L in docs/containment-run-prompt.md.
+
+> I authorize series 8 for GPT-6.1 sol: experiments/series/series8-duress-gpt61sol.json on the
+> OpenAI API (gpt-6.1-sol at $2/$10 per million list, medium effort), series budget $34 and $6
+> per episode, nothing retried. Follow Run L in docs/containment-run-prompt.md.
+
+> I authorize series 8 for Grok 4.6: experiments/series/series8-duress-grok46.json through
+> OpenRouter (x-ai/grok-4.6 at $2/$6 per million list, low effort), series budget $42 and $6 per
+> episode, nothing retried. Follow Run L in docs/containment-run-prompt.md.
+
+> I authorize series 8 for Claude Sonnet 5.5: experiments/series/series8-duress-sonnet55.json on
+> the Anthropic API (claude-sonnet-5-5 at $2/$10 per million list, BLADEGRAPH_ANTHROPIC_API_KEY),
+> series budget $45 and $6 per episode, nothing retried. Follow Run L in
+> docs/containment-run-prompt.md.
+
+**Sonnet 5.5 runs the v2 manifest.** v1 stopped after one calibration episode: Sonnet 5.5 answered
+with tool-call markup or trailing prose on 118 of 284 turns and 4 turns hit the output cap. The
+Anthropic backend now requests structured output against the worker action schema and passes
+effort low; `series8-duress-sonnet55-v2.json` is the frozen manifest (cap $42). Paste instead:
+
+> I authorize series 8 v2 for Claude Sonnet 5.5: the 20 episodes of
+> experiments/series/series8-duress-sonnet55-v2.json run sequentially by scripts/run_series.py on
+> the Anthropic API (claude-sonnet-5-5 at $2/$10 per million list, settled on configured prices,
+> structured output, effort low, 6,500-token cap, key BLADEGRAPH_ANTHROPIC_API_KEY), series
+> budget $42 and $6 per episode, nothing retried. Follow Run L in docs/containment-run-prompt.md.
+
+Procedure: the preflight below (ledger restored from `evidence/ledger-merge-20261012`, the
+provider key self-check where one exists, the offline suite), then
+
+```
+python3 scripts/run_series.py experiments/series/series8-duress-<tag>.json --runs-root private/runs
+```
+
+Report every episode and the gate; push evidence bundles and ledger snapshots to an orphan
+branch `evidence/series8-<tag>-<date>` with SHA-256 files; record the series in docs/phases.md.
+A stopped episode excludes its block and is never rerun. The corrected recovery-delivery check
+is in the code, so series 8 episodes need no offline re-score; `scripts/rescore_recovery_delivery.py`
+is for series 7 bundles only.
 
 ## Run J (onboarding8, one model per authorization): 8-agent rolling task baselines
 
