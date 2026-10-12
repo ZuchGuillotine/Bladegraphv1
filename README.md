@@ -256,7 +256,9 @@ for this class of models and were revised as a recorded bounds version, not per 
 
 Series 7 reruns the gate under version 2 for each fleet on the 8-agent task before any scored
 episode, and the duress blocks then report the classifier's detection and false-positive rates
-against the directed and undirected generations at each seeded share.
+against the directed and undirected generations at each seeded share. The gate, its bounds and
+what model-agnostic operation means in practice are written up in
+[docs/calibration-and-model-agnostic-operation.md](docs/calibration-and-model-agnostic-operation.md).
 
 ### Series 7 gate results on the 8-agent rolling task
 
@@ -427,8 +429,7 @@ calibration gate and the series driver. Live series are frozen manifests under
 ledger before it is made and settled on the provider's reported cost, and nothing is retried.
 
 ```sh
-python3 scripts/run_series.py --manifest experiments/series/series7-duress-glm53.json \
-  --output runs/series7-duress-glm53
+python3 scripts/run_series.py experiments/series/series7-duress-glm53.json --runs-root runs
 ```
 
 Repository map:
