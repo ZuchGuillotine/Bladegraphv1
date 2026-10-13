@@ -96,9 +96,9 @@ gpt-4.1-mini fleet from the environment and are not comparable with series 2.
 `OPENROUTER_API_KEY`, `TYPESAFE_API_KEY` and `GITHUB_TOKEN` are plain environment variables.
 No proxy injection is in use; force the proxy flags off on the command line regardless. Model
 names and the six prices are set in the environment. The latest cumulative ledger is the
-2026-10-12 merge (the 2026-10-05 merge plus the final series 7 fork snapshots): 80,730 rows,
-$112.735176103, 104 unsettled reservations, in `ledger-merge-20261012.tar.gz` on the orphan
-branch `evidence/ledger-merge-20261012` (SHA-256 and `merge-report.json` beside it). Any session
+2026-10-13 merge (series 8 forks and the series 7 GLM close over the 2026-10-12 merge): 118,423
+rows, $165.851206070, 111 unsettled reservations, in `ledger-merge-20261013.tar.gz` on the orphan
+branch `evidence/ledger-merge-20261013` (SHA-256 and `merge-report.json` beside it). Any session
 that runs after a parallel session must merge the forks the same way before publishing a figure.
 
 ## Preflight, before any spend
@@ -108,15 +108,15 @@ that runs after a parallel session must merge the forks the same way before publ
    commit a value; never read `.env` or any file that could hold one.
 3. Restore the ledger from the merge branch:
    ```sh
-   git fetch origin evidence/ledger-merge-20261012
+   git fetch origin evidence/ledger-merge-20261013
    mkdir -p private/evidence
-   for f in ledger-merge-20261012.tar.gz ledger-merge-20261012.tar.gz.sha256; do
-     git show origin/evidence/ledger-merge-20261012:"$f" > private/evidence/"$f"; done
-   python3 scripts/restore_ledger.py --bundle private/evidence/ledger-merge-20261012.tar.gz
+   for f in ledger-merge-20261013.tar.gz ledger-merge-20261013.tar.gz.sha256; do
+     git show origin/evidence/ledger-merge-20261013:"$f" > private/evidence/"$f"; done
+   python3 scripts/restore_ledger.py --bundle private/evidence/ledger-merge-20261013.tar.gz
    python3 -m bladegraph.cli costs
    ```
-   `total_usd` must be $112.735176103 with 104 unsettled reservations (docs/phases.md,
-   2026-10-12). If it shows an older, smaller figure, the wrong bundle was chosen: stop. If a
+   `total_usd` must be $165.851206070 with 111 unsettled reservations (docs/phases.md,
+   2026-10-13). If it shows an older, smaller figure, the wrong bundle was chosen: stop. If a
    later merge branch exists, it supersedes this one and docs/phases.md names it.
    Never create a fresh ledger and never launch without the restored one.
 4. Offline provider construction with the same environment (a temporary Ledger, then

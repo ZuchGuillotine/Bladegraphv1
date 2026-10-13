@@ -104,6 +104,21 @@ WORKER_ACTION_SCHEMA = {
 ANTHROPIC_EFFORT = {"none": "low", "minimal": "low", "low": "low", "medium": "medium", "high": "high", "xhigh": "xhigh"}
 
 
+def anthropic_output_config(response_schema=None, reasoning_effort=None) -> dict:
+    """The Anthropic `output_config` for one call: the strict reply schema (the component's own
+    schema, else the worker action vocabulary) and the effort level. Shared with the boundary
+    audit so its request-hash reconstruction matches the request byte for byte."""
+    config = {
+        "format": {
+            "type": "json_schema",
+            "schema": response_schema if response_schema is not None else WORKER_ACTION_SCHEMA,
+        }
+    }
+    if reasoning_effort is not None:
+        config["effort"] = ANTHROPIC_EFFORT[reasoning_effort]
+    return config
+
+
 class Provider:
     ENDPOINTS = {
         "Jev": "https://api.typesafe.ai/v1/systemone",
@@ -320,6 +335,14 @@ class Provider:
     def request_options(self) -> dict:
         """The OpenRouter chat options beyond messages: identical across a run, recorded in the
         frozen config, and merged the same way by the boundary audit's hash reconstruction."""
+        if self.backend == "anthropic":
+            # Messages API: the cap includes thinking; the reply schema and effort ride in
+            # output_config. Recorded in the frozen config so the boundary audit rebuilds the
+            # request exactly.
+            return {
+                "max_tokens": self.max_output_tokens,
+                "output_config": anthropic_output_config(self.response_schema, self.reasoning_effort),
+            }
         if self.backend == "openai":
             # OpenAI chat completions: the cap includes reasoning tokens; effort is top level.
             options = {"max_completion_tokens": self.max_output_tokens}
@@ -371,19 +394,10 @@ class Provider:
             # Structured output (2026-10-12, series 8 Sonnet 5.5 stop): the reply is constrained to
             # the protocol schema, so a tool-use model cannot answer with tool-call markup or
             # trailing prose; effort is passed through output_config.
-            output_config = {
-                "format": {
-                    "type": "json_schema",
-                    "schema": self.response_schema if self.response_schema is not None else WORKER_ACTION_SCHEMA,
-                }
-            }
-            if self.reasoning_effort is not None:
-                output_config["effort"] = ANTHROPIC_EFFORT[self.reasoning_effort]
             payload = {
                 "system": system,
                 "messages": [{"role": "user", "content": canonical(state)}],
-                "max_tokens": self.max_output_tokens,
-                "output_config": output_config,
+                **self.request_options(),
             }
         result = self.call(payload)
         if self.backend == "anthropic":

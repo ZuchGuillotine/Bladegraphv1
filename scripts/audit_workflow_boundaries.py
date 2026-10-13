@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from bladegraph.providers import anthropic_output_config
 from bladegraph.event_log import EventLog, canonical, digest
 from bladegraph.providers import load_env
 from bladegraph.operational import DIRECTIVE_MARKERS
@@ -89,6 +90,15 @@ def audit_run(path, secrets):
                     # No temperature: the Anthropic backend omits sampling parameters (Opus 5.5).
                     "model": config["worker_model"],
                 }
+                # Runs since 2026-10-12 constrain the reply to the worker action schema and pass
+                # effort through output_config (series 8 Sonnet 5.5). Runs that recorded the
+                # option carry it in worker_request_options; the one v2 episode recorded before
+                # that (9f178a5) carried only a reasoning dict, so its output_config is rebuilt
+                # from the effort it recorded. Earlier Anthropic runs (series 3) sent neither.
+                if "output_config" in options:
+                    payload["output_config"] = options["output_config"]
+                elif options.get("reasoning") is not None:
+                    payload["output_config"] = anthropic_output_config(None, options["reasoning"].get("effort"))
                 endpoint = "https://api.anthropic.com/v1/messages"
             elif config.get("worker_provider") == "openai":
                 payload = {
